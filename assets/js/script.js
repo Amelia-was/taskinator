@@ -4,9 +4,11 @@ var pageContentEl = document.querySelector("#page-content");
 // var to store unqiue item ids
 var taskIdCounter = 0;
 
-// variables targeting Add Task button and Task List
+// variables targeting Add Task button and Task Lists
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
+var tasksInProgressEl = document.querySelector("#tasks-in-progress");
+var tasksCompletedEl = document.querySelector("#tasks-completed");
 
 // Create new task function
 var taskFormHandler = function(event) {
@@ -183,5 +185,32 @@ var deleteTask = function(taskId) {
     taskSelected.remove();
 }
 
+// change task function
+var taskStatusChangeHandler = function(event) {
+    // get the task item id
+    var taskId = event.target.getAttribute("data-task-id");
+
+    // get the currently selected option's value and convert to lowercase
+    var statusValue = event.target.value.toLowerCase();
+
+    // find the parent task item element based on the id
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+    // move task to appropriate list
+    // appendChild() moves element, does not create copy
+    if (statusValue === "to do") {
+        tasksToDoEl.appendChild(taskSelected);
+    }
+    else if (statusValue === "in progress") {
+        tasksInProgressEl.appendChild(taskSelected);
+    }
+    else if (statusValue === "completed") {
+        tasksCompletedEl.appendChild(taskSelected);
+    }
+};
+
 // click event listener for task update buttons
 pageContentEl.addEventListener("click", taskButtonHandler);
+
+// event listener for task status change
+pageContentEl.addEventListener("change", taskStatusChangeHandler);
