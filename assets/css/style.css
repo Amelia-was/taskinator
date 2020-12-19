@@ -41,14 +41,13 @@ li {
 form {
   display: flex;
   align-items: flex-end;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
 }
 
 form input {
   outline: none;
   border: none;
   padding: 12px;
-  width: 100%;
   font-size: 2.2rem;
   border: 2px solid var(--grey);
   border-radius: 12px;
@@ -137,7 +136,7 @@ footer {
 .btn {
   outline: none;
   border: none;
-  display: inline-block;
+  display: inline;
   padding: 10px 15px;
   background: var(--primary);
   font-size: 2.2rem;
@@ -167,12 +166,11 @@ footer {
 
 .select-dropdown,
 .select-status {
-  display: block;
+  display: inline-block;
+  width: 25%;
   font-size: 2.2rem;
   color: #444;
   padding: 12px;
-  width: 100%;
-  max-width: 100%;
   margin: 0;
   border: 2px solid var(--grey);
   border-radius: 12px;
