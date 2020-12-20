@@ -81,8 +81,22 @@ var createTaskEl = function(taskDataObj) {
     var taskActionsEl = createTaskActions(taskIdCounter);
     listItemEl.appendChild(taskActionsEl);
 
-    // append to task list
-    tasksToDoEl.appendChild(listItemEl);
+    // get status index for dropdown
+    var statusSelectEl = listItemEl.querySelector("select[name='status-change']")
+
+    // append to appropriate task list
+    if (taskDataObj.status === "to do") {
+        tasksToDoEl.appendChild(listItemEl);
+        statusSelectEl.selectedIndex = 0;
+    }
+    else if (taskDataObj.status === "in progress") {
+        tasksInProgressEl.appendChild(listItemEl);
+        statusSelectEl.selectedIndex = 1;
+    }
+    else {
+        tasksCompletedEl.appendChild(listItemEl);
+        statusSelectEl.selectedIndex = 2;
+    }
 
     // update unique task id
     taskIdCounter++;
@@ -325,62 +339,20 @@ var saveTasks = function() {
 // load saved tasks on page load
 var loadTasks = function() {
     // get local storage item
-    tasks = localStorage.getItem("tasks");
+    var savedTasks = localStorage.getItem("tasks");
 
-    // check if tasks is null, set to empty array if so
-    if (!tasks) {
-        tasks = [];
+    // check if savedTasks is null
+    if (!savedTasks) {
         return false;
     }
 
     // convert tasks back to array of objects
-    tasks = JSON.parse(tasks);
+    savedTasks = JSON.parse(savedTasks);
 
-    console.log(tasks);
-
-    // iterate through array and append each object to appropriate list
-    for (var i = 0; i < tasks.length; i++) {
-        // reset ids
-        tasks[i].id = taskIdCounter;
-
-        // create list item
-        var listItemEl = document.createElement("li");
-        listItemEl.className = "task-item";
-
-        // add task id as a custom attribute
-        listItemEl.setAttribute("data-task-id", tasks[i].id);
-        listItemEl.setAttribute("draggable", "true");
-
-        // create div to hold task info and add to list item
-        var taskInfoEl = document.createElement("div");
-        // give it a class name
-        taskInfoEl.className = "task-info";
-
-        // add HTML content to div
-        taskInfoEl.innerHTML = "<h3 class='task-name'>" + tasks[i].name + "</h3><span class='task-type'>" + tasks[i].type + "</span>";
-
-        // append list info to li
-        listItemEl.appendChild(taskInfoEl);
-
-        // call fn to create task actions
-        var taskActionsEl = createTaskActions(tasks[i].id);
-        listItemEl.appendChild(taskActionsEl);
-
-        // append to appropriate task list    
-        if (tasks[i].status === "to do") {
-            listItemEl.querySelector("select[name='status-change']").selectedIndex = 0;
-            tasksToDoEl.appendChild(listItemEl);
-        }
-        else if (tasks[i].status === "in progress") {
-            listItemEl.querySelector("select[name='status-change']").selectedIndex = 1;
-            tasksInProgressEl.appendChild(listItemEl);
-        }
-        else {
-            listItemEl.querySelector("select[name='status-change']").selectedIndex = 2;
-            tasksCompletedEl.appendChild(listItemEl);
-        }
-
-        taskIdCounter++;
+    // loop through savedTasks array
+    for (var i = 0; i < savedTasks.length; i++) {
+        // pass each task object into the `createTaskEl()` function
+        createTaskEl(savedTasks[i]);
     }
 }
 
